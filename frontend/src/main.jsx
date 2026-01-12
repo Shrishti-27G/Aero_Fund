@@ -39,6 +39,11 @@ export const router = createBrowserRouter([
       },
 
       {
+        path: "index.html",
+        element: <CatchAllRedirect />
+      },
+
+      {
         path: "*",
         element: <CatchAllRedirect />
       }
