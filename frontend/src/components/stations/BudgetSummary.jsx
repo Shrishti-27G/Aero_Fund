@@ -273,7 +273,7 @@ const BudgetSummary = ({ stations, selectedFY, onAdminBudgetChange }) => {
 
     {/* VALUE + ACTIONS */}
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
 
         {/* EDIT / SAVE */}
         {editing ? (
@@ -282,7 +282,7 @@ const BudgetSummary = ({ stations, selectedFY, onAdminBudgetChange }) => {
             disabled={saving}
             className="text-emerald-300 hover:text-emerald-400 transition"
           >
-            ✔ Save
+            ✔
           </button>
         ) : (
           <button
@@ -293,7 +293,7 @@ const BudgetSummary = ({ stations, selectedFY, onAdminBudgetChange }) => {
                 : "text-slate-400 hover:text-sky-300"
             }`}
           >
-            ✏️ Edit
+            ✏️
           </button>
         )}
 
