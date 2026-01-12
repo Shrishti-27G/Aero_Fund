@@ -6,19 +6,20 @@ import "./index.css";
 import App from "./App.jsx";
 import { Toaster } from "sonner";
 
-// ✅ Public Pages
+
 import Home from "./pages/Home.jsx";
 import Landing from "./pages/Landing.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ProtectedRoute from "./components/authComponent/ProtectedRoute.jsx";
 import Stations from "./components/stations/Stations.jsx";
+import CatchAllRedirect from "./pages/CatchAllRedirect.jsx";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,   // ✅ MAIN LAYOUT
+    element: <App />,   
     children: [
-      // ✅ PUBLIC ROUTES
+    
       {
         index: true,
         element: <Landing />,
@@ -35,7 +36,13 @@ export const router = createBrowserRouter([
             <Stations />
           </ProtectedRoute>
         )
+      },
+
+      {
+        path: "*",
+        element: <CatchAllRedirect />
       }
+      
     ],
   },
 ]);
