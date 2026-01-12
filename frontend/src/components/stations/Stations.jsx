@@ -1240,349 +1240,473 @@ const Stations = () => {
 
         
         {/*  EDIT MODAL */}
-      {openEditModal && (
-  <div
-    className="
-      fixed inset-0 z-50
-      flex items-start sm:items-center justify-center
-      bg-black/60 backdrop-blur-sm
-      px-4 py-6 sm:p-0
-      overflow-y-auto
+        {openEditModal && (
+          <div className=" hidden md:flex fixed  inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="relative w-[90%] md:w-[70%]  rounded-3xl border border-white/15 bg-slate-950/60 px-7 py-7 shadow-[0_22px_70px_rgba(15,23,42,0.9)] backdrop-blur-2xl">
+              <div className="pointer-events-none absolute inset-x-10 -top-16 h-32 bg-gradient-to-b from-emerald-400/40 via-transparent to-transparent blur-3xl" />
+
+              <div className="relative flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-slate-50">
+                    Budget · {editStation?.stationCode}
+                  </h2>
+                  <p className="mt-1 text-xs text-slate-400">
+                    {editStation?.stationName} · {formatFY(selectedFY)}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setOpenEditModal(false)}
+                  className="rounded-full bg-white/5 p-1.5 text-slate-300 hover:bg-white/10"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <form onSubmit={handleEditSubmit} className="relative flex flex-col gap-y-8">
+
+                {/*  AMOUNT FIELDS → RESPONSIVE GRID */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                  {/* ALLOCATED */}
+                  <div>
+                    <label className="mb-1 block text-xs text-slate-300">
+                      Total Allocated (₹)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e") e.preventDefault();
+                      }}
+                      value={editForm.totalAllocated}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          totalAllocated: e.target.value,
+                        })
+                      }
+                      className={baseInputClass}
+                      placeholder="0"
+                    />
+                  </div>
+
+                  {/* UTILIZED */}
+                  <div>
+                    <label className="mb-1 block text-xs text-slate-300">
+                      Total Utilized (₹)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={editForm.totalUtilized}
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        const allocated = Number(editForm.totalAllocated);
+
+                        setEditForm({ ...editForm, totalUtilized: value });
+
+                        if (value > allocated) {
+                          setUtilizedError("Total Utilized cannot exceed Total Allocated");
+                        } else {
+                          setUtilizedError("");
+                        }
+                      }}
+                      className={`${baseInputClass} ${utilizedError ? "border-red-500 focus:ring-red-400/40" : ""
+                        }`}
+                    />
+                    {utilizedError && (
+                      <p className="mt-1 text-xs text-red-400">
+                        {utilizedError}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* ESTIMATED */}
+                  <div>
+                    <label className="mb-1 block text-xs text-slate-300">
+                      Total Estimated (₹)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e") e.preventDefault();
+                      }}
+                      value={editForm.totalEstimated}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          totalEstimated: e.target.value,
+                        })
+                      }
+                      className={baseInputClass}
+                      placeholder="0"
+                    />
+                  </div>
+
+                  {/* REMARK */}
+                  {/* REMARK */}
+                  <div>
+                    <label className="mb-1 block text-xs text-slate-300">
+                      Remark
+                    </label>
+
+                    <input
+                      value={editForm.remark}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          remark: e.target.value,
+                        })
+                      }
+                      className="
+      w-full px-4 py-3
+      rounded-2xl
+      bg-slate-900/80
+      border border-white/20
+      text-sm text-slate-200
+      focus:border-sky-400/60
+      focus:ring-2 focus:ring-sky-400/30
+      transition
     "
-  >
-    <div
-      className="
-        relative
-        w-full
-        max-w-[95%] sm:max-w-[85%] md:max-w-[70%] xl:max-w-[60%]
-        max-h-[92vh] sm:max-h-[88vh]
-        overflow-y-auto
-        rounded-3xl
-        border border-white/15
-        bg-slate-950/60
-        px-5 sm:px-7
-        py-6 sm:py-7
-        shadow-[0_22px_70px_rgba(15,23,42,0.9)]
-        backdrop-blur-2xl
-      "
-    >
-      {/* Glow */}
-      <div className="pointer-events-none absolute inset-x-10 -top-16 h-32 bg-gradient-to-b from-emerald-400/40 via-transparent to-transparent blur-3xl" />
+                      placeholder="Add remark..."
+                    />
+                  </div>
 
-      {/* Header */}
-      <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-50">
-            Budget · {editStation?.stationCode}
-          </h2>
-          <p className="mt-1 text-xs text-slate-400">
-            {editStation?.stationName} · {formatFY(selectedFY)}
-          </p>
-        </div>
 
-        <button
-          onClick={() => setOpenEditModal(false)}
-          className="self-start sm:self-auto rounded-full bg-white/5 p-1.5 text-slate-300 hover:bg-white/10"
-        >
-          ✕
-        </button>
+                  {/*  ALLOCATION TYPE */}
+                  <div className="relative">
+                    <label className="mb-1 block text-xs text-slate-300">
+                      Allocation Type
+                    </label>
+
+                    {/*  SELECT */}
+                    <select
+                      value={editForm.allocationType}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          allocationType: e.target.value,
+                        })
+                      }
+                      className={`${baseInputClass}
+      bg-slate-900/60 backdrop-blur-xl cursor-pointer rounded-xl
+      pr-10
+      appearance-none       /*  REMOVES DEFAULT ARROW */
+      hover:border-sky-400/60 hover:bg-slate-900/80
+      focus:border-sky-400 focus:ring-2 focus:ring-sky-400/40
+      transition`}
+                    >
+                      <option value="" className="bg-slate-900 text-slate-400">
+                        Select Allocation Type
+                      </option>
+                      <option value="Token" className="bg-slate-900">
+                        Token
+                      </option>
+                      <option value="Partial" className="bg-slate-900">
+                        Partial
+                      </option>
+                      <option value="Full" className="bg-slate-900">
+                        Full
+                      </option>
+                    </select>
+
+                    {/*  CUSTOM DOWN ARROW */}
+                    <div className="pointer-events-none absolute right-3 top-11 -translate-y-1/2 text-slate-400">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                {/*  DESCRIPTION */}
+                <div>
+                  <label className="mb-1 block text-xs text-slate-300">
+                    Description
+                  </label>
+
+                  <textarea
+                    rows={3}
+                    value={editForm.description}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        description: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/15 
+    text-sm text-slate-100 placeholder:text-slate-400 focus:outline-none 
+    focus:ring-2 focus:ring-blue-400/70 resize-none"
+                    placeholder="Optional description about this budget..."
+                  />
+                </div>
+
+                {/*  UPLOAD (FULL WIDTH) */}
+                <div className="relative w-full">
+
+                  <label className="relative flex flex-col items-center justify-center w-full h-32 sm:h-36 border-2 border-dashed border-white/20 rounded-2xl cursor-pointer bg-white/5 hover:bg-white/10 transition group overflow-hidden">
+
+                    {editForm.receipt ? (
+                      <>
+                        <img
+                          src={URL.createObjectURL(editForm.receipt)}
+                          alt="Preview"
+                          className="absolute inset-0 h-full w-full object-cover rounded-2xl"
+                        />
+                        <div className="absolute inset-0 bg-black/40"></div>
+                        <p className="relative z-10 text-xs text-slate-200 font-semibold">
+                          Click to change image
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-7 h-7 mb-1 text-slate-300 group-hover:text-sky-300 transition"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 16v-8m0 0l-3 3m3-3l3 3M4 16.5a4.5 4.5 0 010-9h.75a5.25 5.25 0 0110.5 0H20a4 4 0 010 8h-8"
+                          />
+                        </svg>
+
+                        <p className="text-xs text-slate-300 text-center">
+                          <span className="font-semibold text-slate-100">Click to upload</span> or drag & drop
+                          <br />
+                          PNG, JPG (max 10MB)
+                        </p>
+                      </>
+                    )}
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        setEditForm({
+                          ...editForm,
+                          receipt: e.target.files[0],
+                        });
+                        setUploadProgress(0);
+                      }}
+                    />
+                  </label>
+
+                  {/*  FILE NAME + REMOVE */}
+                  {editForm.receipt && (
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <p className="text-[11px] text-emerald-300 truncate max-w-[70%]">
+                        {editForm.receipt.name}
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditForm({ ...editForm, receipt: null });
+                          setUploadProgress(0);
+                        }}
+                        className="rounded-full bg-rose-500/20 px-3 py-1 text-[10px] font-semibold text-rose-300 border border-rose-400/30 hover:bg-rose-500/30 transition"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+
+                  {/*  PROGRESS BAR */}
+                  {uploadProgress > 0 && (
+                    <>
+                      <div className="mt-2 w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 transition-all duration-300"
+                          style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                      </div>
+
+                      <p className="mt-1 text-[10px] text-slate-300 text-center">
+                        Uploading… {uploadProgress}%
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                {/*  SAVE BUTTON */}
+                <button className="mt-4 w-full rounded-2xl bg-gradient-to-r from-emerald-400 to-sky-400 py-2.5 text-sm font-semibold text-slate-950 shadow-md shadow-emerald-400/40 hover:shadow-emerald-300/60 hover:scale-[1.01] active:scale-[0.99] transition">
+                  Save Budget
+                </button>
+
+              </form>
+
+
+            </div>
+          </div>
+        )
+        }
+
+        
+
+        {openEditModal && (
+  <div className="md:hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex flex-col">
+
+    {/* HEADER */}
+    <div className="flex items-center justify-between px-4 py-4 border-b border-white/10 bg-slate-950/90">
+      <div>
+        <h2 className="text-base font-semibold text-white">
+          Budget · {editStation?.stationCode}
+        </h2>
+        <p className="text-xs text-slate-400">
+          {editStation?.stationName} · {formatFY(selectedFY)}
+        </p>
       </div>
 
-      <form onSubmit={handleEditSubmit} className="relative flex flex-col gap-y-8">
-        {/* INPUT GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {/* ALLOCATED */}
-          <div>
-            <label className="mb-1 block text-xs text-slate-300">
-              Total Allocated (₹)
-            </label>
-            <input
-              type="number"
-              min="0"
-              onKeyDown={(e) => {
-                if (e.key === "-" || e.key === "e") e.preventDefault();
-              }}
-              value={editForm.totalAllocated}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  totalAllocated: e.target.value,
-                })
-              }
-              className={baseInputClass}
-              placeholder="0"
-            />
-          </div>
+      <button
+        onClick={() => setOpenEditModal(false)}
+        className="text-slate-300 text-xl"
+      >
+        ✕
+      </button>
+    </div>
 
-          {/* UTILIZED */}
-          <div>
-            <label className="mb-1 block text-xs text-slate-300">
-              Total Utilized (₹)
-            </label>
-            <input
-              type="number"
-              min="0"
-              value={editForm.totalUtilized}
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                const allocated = Number(editForm.totalAllocated);
+    {/* CONTENT */}
+    <form
+      onSubmit={handleEditSubmit}
+      className="flex-1 overflow-y-auto px-4 py-5 space-y-6"
+    >
 
-                setEditForm({ ...editForm, totalUtilized: value });
-
-                if (value > allocated) {
-                  setUtilizedError("Total Utilized cannot exceed Total Allocated");
-                } else {
-                  setUtilizedError("");
-                }
-              }}
-              className={`${baseInputClass} ${
-                utilizedError ? "border-red-500 focus:ring-red-400/40" : ""
-              }`}
-            />
-            {utilizedError && (
-              <p className="mt-1 text-xs text-red-400">{utilizedError}</p>
-            )}
-          </div>
-
-          {/* ESTIMATED */}
-          <div>
-            <label className="mb-1 block text-xs text-slate-300">
-              Total Estimated (₹)
-            </label>
-            <input
-              type="number"
-              min="0"
-              onKeyDown={(e) => {
-                if (e.key === "-" || e.key === "e") e.preventDefault();
-              }}
-              value={editForm.totalEstimated}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  totalEstimated: e.target.value,
-                })
-              }
-              className={baseInputClass}
-              placeholder="0"
-            />
-          </div>
-
-          {/* REMARK */}
-          <div>
-            <label className="mb-1 block text-xs text-slate-300">Remark</label>
-            <input
-              value={editForm.remark}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  remark: e.target.value,
-                })
-              }
-              className="
-                w-full px-4 py-3 rounded-2xl
-                bg-slate-900/80 border border-white/20
-                text-sm text-slate-200
-                focus:border-sky-400/60
-                focus:ring-2 focus:ring-sky-400/30
-                transition
-              "
-              placeholder="Add remark..."
-            />
-          </div>
-
-          {/* ALLOCATION TYPE */}
-          <div className="relative">
-            <label className="mb-1 block text-xs text-slate-300">
-              Allocation Type
-            </label>
-
-            <select
-              value={editForm.allocationType}
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  allocationType: e.target.value,
-                })
-              }
-              className={`${baseInputClass}
-                bg-slate-900/60 backdrop-blur-xl cursor-pointer
-                pr-10 appearance-none
-                hover:border-sky-400/60 hover:bg-slate-900/80
-                focus:border-sky-400 focus:ring-2 focus:ring-sky-400/40
-                transition`}
-            >
-              <option value="" className="bg-slate-900 text-slate-400">
-                Select Allocation Type
-              </option>
-              <option value="Token" className="bg-slate-900">
-                Token
-              </option>
-              <option value="Partial" className="bg-slate-900">
-                Partial
-              </option>
-              <option value="Full" className="bg-slate-900">
-                Full
-              </option>
-            </select>
-
-            <div className="pointer-events-none absolute right-3 top-11 -translate-y-1/2 text-slate-400">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* DESCRIPTION */}
-        <div>
-          <label className="mb-1 block text-xs text-slate-300">
-            Description
-          </label>
-          <textarea
-            rows={3}
-            value={editForm.description}
+      {/* AMOUNTS */}
+      <section className="space-y-4">
+        <Input label="Total Allocated (₹)">
+          <input
+            type="number"
+            value={editForm.totalAllocated}
             onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                description: e.target.value,
-              })
+              setEditForm({ ...editForm, totalAllocated: e.target.value })
             }
-            className="
-              w-full px-4 py-3 rounded-2xl
-              bg-white/5 border border-white/15
-              text-sm text-slate-100 placeholder:text-slate-400
-              focus:outline-none focus:ring-2 focus:ring-blue-400/70
-              resize-none
-            "
-            placeholder="Optional description about this budget..."
+            className={baseInputClass}
           />
-        </div>
+        </Input>
 
-        {/* UPLOAD */}
-        <div className="relative w-full">
-          <label
-            className="
-              relative flex flex-col items-center justify-center
-              w-full h-28 sm:h-32 md:h-36
-              border-2 border-dashed border-white/20
-              rounded-2xl cursor-pointer
-              bg-white/5 hover:bg-white/10
-              transition group overflow-hidden
-            "
+        <Input label="Total Utilized (₹)">
+          <input
+            type="number"
+            value={editForm.totalUtilized}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              setEditForm({ ...editForm, totalUtilized: value });
+              setUtilizedError(
+                value > editForm.totalAllocated
+                  ? "Total Utilized cannot exceed Total Allocated"
+                  : ""
+              );
+            }}
+            className={`${baseInputClass} ${
+              utilizedError ? "border-red-500" : ""
+            }`}
+          />
+          {utilizedError && (
+            <p className="text-xs text-red-400 mt-1">{utilizedError}</p>
+          )}
+        </Input>
+
+        <Input label="Total Estimated (₹)">
+          <input
+            type="number"
+            value={editForm.totalEstimated}
+            onChange={(e) =>
+              setEditForm({ ...editForm, totalEstimated: e.target.value })
+            }
+            className={baseInputClass}
+          />
+        </Input>
+      </section>
+
+      {/* META */}
+      <section className="space-y-4">
+        <Input label="Allocation Type">
+          <select
+            value={editForm.allocationType}
+            onChange={(e) =>
+              setEditForm({ ...editForm, allocationType: e.target.value })
+            }
+            className={baseInputClass}
           >
-            {editForm.receipt ? (
-              <>
-                <img
-                  src={URL.createObjectURL(editForm.receipt)}
-                  alt="Preview"
-                  className="absolute inset-0 h-full w-full object-cover rounded-2xl"
-                />
-                <div className="absolute inset-0 bg-black/40" />
-                <p className="relative z-10 text-xs text-slate-200 font-semibold">
-                  Click to change image
-                </p>
-              </>
-            ) : (
-              <>
-                <svg
-                  className="w-7 h-7 mb-1 text-slate-300 group-hover:text-sky-300 transition"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 16v-8m0 0l-3 3m3-3l3 3M4 16.5a4.5 4.5 0 010-9h.75a5.25 5.25 0 0110.5 0H20a4 4 0 010 8h-8"
-                  />
-                </svg>
-                <p className="text-xs text-slate-300 text-center">
-                  <span className="font-semibold text-slate-100">
-                    Click to upload
-                  </span>{" "}
-                  or drag & drop
-                  <br />
-                  PNG, JPG (max 10MB)
-                </p>
-              </>
-            )}
+            <option value="">Select Allocation Type</option>
+            <option value="Token">Token</option>
+            <option value="Partial">Partial</option>
+            <option value="Full">Full</option>
+          </select>
+        </Input>
 
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                setEditForm({
-                  ...editForm,
-                  receipt: e.target.files[0],
-                });
-                setUploadProgress(0);
-              }}
-            />
-          </label>
+        <Input label="Remark">
+          <input
+            value={editForm.remark}
+            onChange={(e) =>
+              setEditForm({ ...editForm, remark: e.target.value })
+            }
+            className={baseInputClass}
+          />
+        </Input>
+      </section>
 
-          {editForm.receipt && (
-            <div className="mt-2 flex items-center justify-between gap-2">
-              <p className="text-[11px] text-emerald-300 truncate max-w-[70%]">
-                {editForm.receipt.name}
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditForm({ ...editForm, receipt: null });
-                  setUploadProgress(0);
-                }}
-                className="
-                  rounded-full bg-rose-500/20 px-3 py-1
-                  text-[10px] font-semibold text-rose-300
-                  border border-rose-400/30
-                  hover:bg-rose-500/30 transition
-                "
-              >
-                Remove
-              </button>
-            </div>
-          )}
+      {/* DESCRIPTION */}
+      <section>
+        <label className="text-xs text-slate-300 mb-1 block">
+          Description
+        </label>
+        <textarea
+          rows={3}
+          value={editForm.description}
+          onChange={(e) =>
+            setEditForm({ ...editForm, description: e.target.value })
+          }
+          className={baseInputClass}
+        />
+      </section>
 
-          {uploadProgress > 0 && (
-            <>
-              <div className="mt-2 w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 transition-all duration-300"
-                  style={{ width: `${uploadProgress}%` }}
-                />
-              </div>
-              <p className="mt-1 text-[10px] text-slate-300 text-center">
-                Uploading… {uploadProgress}%
-              </p>
-            </>
-          )}
-        </div>
+      {/* UPLOAD */}
+      <section>
+        <label className="text-xs text-slate-300 mb-2 block">
+          Receipt
+        </label>
 
-        {/* SAVE */}
-        <button
-          className="
-            mt-6 w-full rounded-2xl
-            bg-gradient-to-r from-emerald-400 to-sky-400
-            py-3 sm:py-2.5
-            text-sm font-semibold text-slate-950
-            shadow-md shadow-emerald-400/40
-            hover:shadow-emerald-300/60
-            hover:scale-[1.01]
-            active:scale-[0.99]
-            transition
-          "
-        >
-          Save Budget
-        </button>
-      </form>
+        <label className="h-28 rounded-xl border border-dashed border-white/20 flex items-center justify-center cursor-pointer">
+          <input
+            type="file"
+            className="hidden"
+            onChange={(e) =>
+              setEditForm({ ...editForm, receipt: e.target.files[0] })
+            }
+          />
+          <span className="text-xs text-slate-400">
+            {editForm.receipt ? editForm.receipt.name : "Tap to upload image"}
+          </span>
+        </label>
+      </section>
+    </form>
+
+    {/* FOOTER */}
+    <div className="px-4 py-4 border-t border-white/10 bg-slate-950/90">
+      <button
+        className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-sky-400 py-3 text-sm font-semibold text-slate-950"
+      >
+        Save Budget
+      </button>
     </div>
   </div>
 )}
