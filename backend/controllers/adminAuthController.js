@@ -2,17 +2,7 @@ import { Supervisor } from "../models/supervisorModel.js";
 import jwt from "jsonwebtoken";
 
 
-const accessCookieOptions = {
-  httpOnly: true,
-  secure: false,
-  sameSite: "lax",
-};
 
-const refreshCookieOptions = {
-  httpOnly: true,
-  secure: false,
-  sameSite: "lax",
-};
 
 
 
@@ -83,19 +73,19 @@ export const loginAdmin = async (req, res) => {
 
     
     res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 1 * 24 * 60 * 60 * 1000,
-    });
+  httpOnly: true,
+  secure: true,              
+  sameSite: "none",          
+  maxAge: 1 * 24 * 60 * 60 * 1000,
+});
 
-    
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 5 * 24 * 60 * 60 * 1000,
-    });
+res.cookie("refreshToken", refreshToken, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 5 * 24 * 60 * 60 * 1000,
+});
+
 
     
     res.status(200).json({
