@@ -1560,7 +1560,7 @@ const Stations = () => {
         }
         
 
-        {openEditModal && (
+  {openEditModal && (
   <div className="md:hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex flex-col">
 
     {/* HEADER */}
@@ -1588,84 +1588,98 @@ const Stations = () => {
       className="flex-1 overflow-y-auto px-4 py-5 space-y-6"
     >
 
-      {/* AMOUNTS */}
-      <section className="space-y-4">
-        <Input label="Total Allocated (₹)">
-          <input
-            type="number"
-            value={editForm.totalAllocated}
-            onChange={(e) =>
-              setEditForm({ ...editForm, totalAllocated: e.target.value })
-            }
-            className={baseInputClass}
-          />
-        </Input>
+      {/* TOTAL ALLOCATED */}
+      <div>
+        <label className="block text-xs text-slate-300 mb-1">
+          Total Allocated (₹)
+        </label>
+        <input
+          type="number"
+          value={editForm.totalAllocated}
+          onChange={(e) =>
+            setEditForm({ ...editForm, totalAllocated: e.target.value })
+          }
+          className={baseInputClass}
+        />
+      </div>
 
-        <Input label="Total Utilized (₹)">
-          <input
-            type="number"
-            value={editForm.totalUtilized}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              setEditForm({ ...editForm, totalUtilized: value });
-              setUtilizedError(
-                value > editForm.totalAllocated
-                  ? "Total Utilized cannot exceed Total Allocated"
-                  : ""
-              );
-            }}
-            className={`${baseInputClass} ${
-              utilizedError ? "border-red-500" : ""
-            }`}
-          />
-          {utilizedError && (
-            <p className="text-xs text-red-400 mt-1">{utilizedError}</p>
-          )}
-        </Input>
+      {/* TOTAL UTILIZED */}
+      <div>
+        <label className="block text-xs text-slate-300 mb-1">
+          Total Utilized (₹)
+        </label>
+        <input
+          type="number"
+          value={editForm.totalUtilized}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            setEditForm({ ...editForm, totalUtilized: value });
+            setUtilizedError(
+              value > editForm.totalAllocated
+                ? "Total Utilized cannot exceed Total Allocated"
+                : ""
+            );
+          }}
+          className={`${baseInputClass} ${
+            utilizedError ? "border-red-500" : ""
+          }`}
+        />
+        {utilizedError && (
+          <p className="text-xs text-red-400 mt-1">{utilizedError}</p>
+        )}
+      </div>
 
-        <Input label="Total Estimated (₹)">
-          <input
-            type="number"
-            value={editForm.totalEstimated}
-            onChange={(e) =>
-              setEditForm({ ...editForm, totalEstimated: e.target.value })
-            }
-            className={baseInputClass}
-          />
-        </Input>
-      </section>
+      {/* TOTAL ESTIMATED */}
+      <div>
+        <label className="block text-xs text-slate-300 mb-1">
+          Total Estimated (₹)
+        </label>
+        <input
+          type="number"
+          value={editForm.totalEstimated}
+          onChange={(e) =>
+            setEditForm({ ...editForm, totalEstimated: e.target.value })
+          }
+          className={baseInputClass}
+        />
+      </div>
 
-      {/* META */}
-      <section className="space-y-4">
-        <Input label="Allocation Type">
-          <select
-            value={editForm.allocationType}
-            onChange={(e) =>
-              setEditForm({ ...editForm, allocationType: e.target.value })
-            }
-            className={baseInputClass}
-          >
-            <option value="">Select Allocation Type</option>
-            <option value="Token">Token</option>
-            <option value="Partial">Partial</option>
-            <option value="Full">Full</option>
-          </select>
-        </Input>
+      {/* ALLOCATION TYPE */}
+      <div>
+        <label className="block text-xs text-slate-300 mb-1">
+          Allocation Type
+        </label>
+        <select
+          value={editForm.allocationType}
+          onChange={(e) =>
+            setEditForm({ ...editForm, allocationType: e.target.value })
+          }
+          className={baseInputClass}
+        >
+          <option value="">Select Allocation Type</option>
+          <option value="Token">Token</option>
+          <option value="Partial">Partial</option>
+          <option value="Full">Full</option>
+        </select>
+      </div>
 
-        <Input label="Remark">
-          <input
-            value={editForm.remark}
-            onChange={(e) =>
-              setEditForm({ ...editForm, remark: e.target.value })
-            }
-            className={baseInputClass}
-          />
-        </Input>
-      </section>
+      {/* REMARK */}
+      <div>
+        <label className="block text-xs text-slate-300 mb-1">
+          Remark
+        </label>
+        <input
+          value={editForm.remark}
+          onChange={(e) =>
+            setEditForm({ ...editForm, remark: e.target.value })
+          }
+          className={baseInputClass}
+        />
+      </div>
 
       {/* DESCRIPTION */}
-      <section>
-        <label className="text-xs text-slate-300 mb-1 block">
+      <div>
+        <label className="block text-xs text-slate-300 mb-1">
           Description
         </label>
         <textarea
@@ -1676,11 +1690,11 @@ const Stations = () => {
           }
           className={baseInputClass}
         />
-      </section>
+      </div>
 
-      {/* UPLOAD */}
-      <section>
-        <label className="text-xs text-slate-300 mb-2 block">
+      {/* RECEIPT */}
+      <div>
+        <label className="block text-xs text-slate-300 mb-2">
           Receipt
         </label>
 
@@ -1693,15 +1707,19 @@ const Stations = () => {
             }
           />
           <span className="text-xs text-slate-400">
-            {editForm.receipt ? editForm.receipt.name : "Tap to upload image"}
+            {editForm.receipt
+              ? editForm.receipt.name
+              : "Tap to upload image"}
           </span>
         </label>
-      </section>
+      </div>
     </form>
 
     {/* FOOTER */}
     <div className="px-4 py-4 border-t border-white/10 bg-slate-950/90">
       <button
+        type="submit"
+        onClick={handleEditSubmit}
         className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-sky-400 py-3 text-sm font-semibold text-slate-950"
       >
         Save Budget
@@ -1709,7 +1727,6 @@ const Stations = () => {
     </div>
   </div>
 )}
-
 
 
         {/*  RECEIPT VIEW MODAL */}
