@@ -1241,7 +1241,7 @@ const Stations = () => {
         
         {/*  EDIT MODAL */}
         {openEditModal && (
-          <div className=" hidden md:flex fixed  inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="fixed  inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div className="relative w-[90%] md:w-[70%]  rounded-3xl border border-white/15 bg-slate-950/60 px-7 py-7 shadow-[0_22px_70px_rgba(15,23,42,0.9)] backdrop-blur-2xl">
               <div className="pointer-events-none absolute inset-x-10 -top-16 h-32 bg-gradient-to-b from-emerald-400/40 via-transparent to-transparent blur-3xl" />
 
@@ -1558,7 +1558,6 @@ const Stations = () => {
           </div>
         )
         }
-
         
 
         {openEditModal && (
