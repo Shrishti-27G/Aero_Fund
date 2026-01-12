@@ -38,6 +38,11 @@ export const router = createBrowserRouter([
 
     ],
   },
+
+  {
+        path: "*",
+        element: <CatchAllRedirect />
+      },
 ]);
 
 createRoot(document.getElementById("root")).render(
