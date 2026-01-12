@@ -163,114 +163,131 @@ const BudgetSummary = ({ stations, selectedFY, onAdminBudgetChange }) => {
         </h2>
       </div>
 
-      
-      <table className="w-full text-xs sm:text-sm text-slate-200">
-        <tbody>
+      {/* DESKTOP TABLE */}
+<div className="hidden md:block">
+  <table className="w-full text-sm text-slate-200">
+    <tbody>
+      {/* ADMIN BUDGET */}
+      <tr className="border-b border-white/10">
+        <td className="px-4 py-3 text-slate-300">
+          Total Budget Allocated to You
+        </td>
 
-          {/* ADMIN BUDGET */}
-          <tr className="border-b border-white/10">
-            {/* LABEL */}
-            <td className="px-4 py-3 text-slate-300">
-              Total Budget Allocated to You
-            </td>
-
-           
-            <td
-              colSpan={2}
-              className="px-4 py-3"
-            >
-              <div className="flex items-center justify-end gap-3">
-
-                {/* EDIT / SAVE ICON */}
-                {editing ? (
-                  <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="text-emerald-300 hover:text-emerald-400 transition"
-                    title="Save"
-                  >
-                    ✔
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setEditing(true)}
-                    className={`transition-transform duration-300 ${Number(adminBudget) !== Number(originalBudget)
-                      ? "text-amber-400 translate-x-1"
-                      : "text-slate-400 hover:text-sky-300"
-                      }`}
-                    title="Edit"
-                  >
-                    ✏️
-                  </button>
-                )}
-
-                {/* AMOUNT */}
-                {editing ? (
-                  <input
-                    type="number"
-                    min="0"
-                    value={adminBudget}
-                    onChange={(e) => setAdminBudget(e.target.value)}
-                    className="w-32 px-2 py-1 rounded-lg bg-slate-900 border border-white/20 text-right text-cyan-300"
-                  />
-                ) : (
-                  <span className="font-semibold text-cyan-300">
-                    ₹ {formatINR(adminBudget)}
-                  </span>
-                )}
-
-              </div>
-            </td>
-          </tr>
-
-          {/* STATIONS ALLOCATED */}
-          <tr className="border-b border-white/10">
-            <td className="px-4 py-3 text-slate-300">
-              Total Budget Allocated to Stations
-            </td>
-            <td colSpan={2} className="px-4 py-3 text-right font-semibold text-sky-300">
-              ₹ {formatINR(totalAllocated)}
-            </td>
-          </tr>
-
-          {/* UTILIZED */}
-          <tr className="border-b border-white/10">
-            <td className="px-4 py-3 text-slate-300">
-              Stations have Utilized till date
-            </td>
-            <td colSpan={2} className="px-4 py-3 text-right font-semibold text-emerald-300">
-              ₹ {formatINR(totalUtilized)}
-            </td>
-          </tr>
-
-          {/* UTILIZATION */}
-          <tr>
-            <td className="px-4 py-3 text-slate-300">
-              Budget Utilization by stations (%)
-            </td>
-            <td colSpan={2} className="px-4 py-3 text-right font-semibold text-violet-300">
-              {utilizationPercent} %
-            </td>
-          </tr>
-
-          {/* REMAINING */}
-          <tr className="border-b border-white/10">
-            <td className="px-4 py-3 text-slate-300">
-              Your Remaining Budget
-            </td>
-            <td
-              colSpan={2}
-              className={`px-4 py-3 text-right font-semibold ${remainingBudget < 0 ? "text-rose-400" : "text-lime-300"
+        <td colSpan={2} className="px-4 py-3">
+          <div className="flex items-center justify-end gap-3">
+            {editing ? (
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="text-emerald-300 hover:text-emerald-400"
+              >
+                ✔
+              </button>
+            ) : (
+              <button
+                onClick={() => setEditing(true)}
+                className={`transition ${Number(adminBudget) !== Number(originalBudget)
+                  ? "text-amber-400"
+                  : "text-slate-400 hover:text-sky-300"
                 }`}
-            >
-              ₹ {formatINR(remainingBudget)}
-            </td>
-          </tr>
+              >
+                ✏️
+              </button>
+            )}
 
+            {editing ? (
+              <input
+                type="number"
+                min="0"
+                value={adminBudget}
+                onChange={(e) => setAdminBudget(e.target.value)}
+                className="w-32 px-2 py-1 rounded-lg bg-slate-900 border border-white/20 text-right text-cyan-300"
+              />
+            ) : (
+              <span className="font-semibold text-cyan-300">
+                ₹ {formatINR(adminBudget)}
+              </span>
+            )}
+          </div>
+        </td>
+      </tr>
 
+      {/* STATIONS ALLOCATED */}
+      <tr className="border-b border-white/10">
+        <td className="px-4 py-3 text-slate-300">
+          Total Budget Allocated to Stations
+        </td>
+        <td colSpan={2} className="px-4 py-3 text-right font-semibold text-sky-300">
+          ₹ {formatINR(totalAllocated)}
+        </td>
+      </tr>
 
-        </tbody>
-      </table>
+      {/* UTILIZED */}
+      <tr className="border-b border-white/10">
+        <td className="px-4 py-3 text-slate-300">
+          Stations have Utilized till date
+        </td>
+        <td colSpan={2} className="px-4 py-3 text-right font-semibold text-emerald-300">
+          ₹ {formatINR(totalUtilized)}
+        </td>
+      </tr>
+
+      {/* UTILIZATION */}
+      <tr className="border-b border-white/10">
+        <td className="px-4 py-3 text-slate-300">
+          Budget Utilization by stations (%)
+        </td>
+        <td colSpan={2} className="px-4 py-3 text-right font-semibold text-violet-300">
+          {utilizationPercent} %
+        </td>
+      </tr>
+
+      {/* REMAINING */}
+      <tr>
+        <td className="px-4 py-3 text-slate-300">
+          Your Remaining Budget
+        </td>
+        <td
+          colSpan={2}
+          className={`px-4 py-3 text-right font-semibold ${
+            remainingBudget < 0 ? "text-rose-400" : "text-lime-300"
+          }`}
+        >
+          ₹ {formatINR(remainingBudget)}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{/* MOBILE CARDS */}
+<div className="md:hidden space-y-4">
+  {[
+    { label: "Total Budget Allocated to You", value: `₹ ${formatINR(adminBudget)}` },
+    { label: "Total Budget Allocated to Stations", value: `₹ ${formatINR(totalAllocated)}` },
+    { label: "Stations have Utilized till date", value: `₹ ${formatINR(totalUtilized)}` },
+    { label: "Budget Utilization (%)", value: `${utilizationPercent}%` },
+    { label: "Your Remaining Budget", value: `₹ ${formatINR(remainingBudget)}`, danger: remainingBudget < 0 },
+  ].map((item, idx) => (
+    <div
+      key={idx}
+      className="rounded-xl bg-slate-900/60 border border-white/10 p-4 flex justify-between items-center"
+    >
+      <span className="text-slate-300 text-sm">{item.label}</span>
+      <span
+        className={`font-semibold ${
+          item.danger ? "text-rose-400" : "text-cyan-300"
+        }`}
+      >
+        {item.value}
+      </span>
+    </div>
+  ))}
+</div>
+
+      
+      
+
     </div>
   );
 };
