@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const CatchAllRedirect = () => {
   const isAuthenticated = useSelector(
-    (state) => state.adminAuth.isAuthenticated
+    (state) => state?.adminAuth?.isAuthenticated
   );
 
   if (isAuthenticated) {
