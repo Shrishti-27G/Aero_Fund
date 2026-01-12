@@ -36,14 +36,7 @@ export const router = createBrowserRouter([
             <Stations />
           </ProtectedRoute>
         )
-      },
-
-      {
-        path: "index.html",
-        element: <CatchAllRedirect />
-      },
-
-      
+      },      
       
     ],
   },
