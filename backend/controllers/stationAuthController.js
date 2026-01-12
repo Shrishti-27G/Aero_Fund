@@ -4,17 +4,18 @@ import { Supervisor } from "../models/supervisorModel.js";
 
 const accessCookieOptions = {
   httpOnly: true,
-  secure: false, 
-  sameSite: "lax",
-  maxAge: 1 * 24 * 60 * 60 * 1000,
+  secure: true,         
+  sameSite: "none",     
+  maxAge: 1 * 24 * 60 * 60 * 1000
 };
 
 const refreshCookieOptions = {
   httpOnly: true,
-  secure: false, 
-  sameSite: "lax",
-  maxAge: 5 * 24 * 60 * 60 * 1000, 
+  secure: true,
+  sameSite: "none",
+  maxAge: 5 * 24 * 60 * 60 * 1000
 };
+
 
 
 
