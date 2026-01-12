@@ -11,6 +11,7 @@ import Home from "./pages/Home.jsx";
 import Landing from "./pages/Landing.jsx";
 import Dashboard from "./components/stations/Dashboard.jsx";
 import ProtectedRoute from "./components/authComponent/ProtectedRoute.jsx";
+import CatchAllRedirect from "./pages/CatchAllRedirect.jsx";
 
 
 export const router = createBrowserRouter([
