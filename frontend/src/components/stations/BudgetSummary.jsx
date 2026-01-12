@@ -260,30 +260,97 @@ const BudgetSummary = ({ stations, selectedFY, onAdminBudgetChange }) => {
   </table>
 </div>
 
+
 {/* MOBILE CARDS */}
 <div className="md:hidden space-y-4">
+
+  {/* ADMIN BUDGET (EDITABLE) */}
+  <div className="rounded-xl bg-slate-900/60 border border-white/10 p-4 space-y-3">
+    {/* LABEL */}
+    <span className="text-slate-300 text-sm">
+      Total Budget Allocated to You
+    </span>
+
+    {/* VALUE + ACTIONS */}
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+
+        {/* EDIT / SAVE */}
+        {editing ? (
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="text-emerald-300 hover:text-emerald-400 transition"
+          >
+            ✔ Save
+          </button>
+        ) : (
+          <button
+            onClick={() => setEditing(true)}
+            className={`text-sm transition ${
+              Number(adminBudget) !== Number(originalBudget)
+                ? "text-amber-400"
+                : "text-slate-400 hover:text-sky-300"
+            }`}
+          >
+            ✏️ Edit
+          </button>
+        )}
+
+        {/* VALUE / INPUT */}
+        {editing ? (
+          <input
+            type="number"
+            min="0"
+            value={adminBudget}
+            onChange={(e) => setAdminBudget(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-white/20 text-right text-cyan-300"
+          />
+        ) : (
+          <span className="font-semibold text-cyan-300">
+            ₹ {formatINR(adminBudget)}
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+
+  {/* OTHER METRICS */}
   {[
-    { label: "Total Budget Allocated to You", value: `₹ ${formatINR(adminBudget)}` },
-    { label: "Total Budget Allocated to Stations", value: `₹ ${formatINR(totalAllocated)}` },
-    { label: "Stations have Utilized till date", value: `₹ ${formatINR(totalUtilized)}` },
-    { label: "Budget Utilization (%)", value: `${utilizationPercent}%` },
-    { label: "Your Remaining Budget", value: `₹ ${formatINR(remainingBudget)}`, danger: remainingBudget < 0 },
+    {
+      label: "Total Budget Allocated to Stations",
+      value: `₹ ${formatINR(totalAllocated)}`,
+      color: "text-sky-300",
+    },
+    {
+      label: "Stations have Utilized till date",
+      value: `₹ ${formatINR(totalUtilized)}`,
+      color: "text-emerald-300",
+    },
+    {
+      label: "Budget Utilization (%)",
+      value: `${utilizationPercent}%`,
+      color: "text-violet-300",
+    },
+    {
+      label: "Your Remaining Budget",
+      value: `₹ ${formatINR(remainingBudget)}`,
+      color: remainingBudget < 0 ? "text-rose-400" : "text-lime-300",
+    },
   ].map((item, idx) => (
     <div
       key={idx}
-      className="rounded-xl bg-slate-900/60 border border-white/10 p-4 flex justify-between items-center"
+      className="rounded-xl bg-slate-900/60 border border-white/10 p-4 flex flex-col gap-1"
     >
       <span className="text-slate-300 text-sm">{item.label}</span>
-      <span
-        className={`font-semibold ${
-          item.danger ? "text-rose-400" : "text-cyan-300"
-        }`}
-      >
+      <span className={`font-semibold ${item.color}`}>
         {item.value}
       </span>
     </div>
   ))}
+
 </div>
+
 
       
       
